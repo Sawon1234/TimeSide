@@ -37,6 +37,8 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
 from django.conf import settings
 
+from django_extensions.db.fields import UUIDField
+
 app = 'timeside'
 
 processors = timeside.core.processor.processors(timeside.core.api.IProcessor)
@@ -106,7 +108,7 @@ class BaseResource(models.Model):
     date_added = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified = models.DateTimeField(_('date modified'), auto_now=True,
                                          null=True)
-    uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=255)
+    uuid = UUIDField(_('uuid'), unique=True, blank=True)
 
     class Meta(MetaCore):
         abstract = True
@@ -119,7 +121,7 @@ class BaseResource(models.Model):
 
 class DocBaseResource(BaseResource):
 
-    title = models.CharField(_('title'), blank=True, max_length=512)
+    title = models.CharField(_('title'), blank=True, max_length=256)
     description = models.TextField(_('description'), blank=True)
 
     def __unicode__(self):
