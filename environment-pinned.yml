@@ -2,11 +2,13 @@ name: app
 dependencies:
 - aubio=0.4.2=np110py27_1
 - backports_abc=0.4=py27_0
+- bokeh=0.11.0=py27_1
 - cairo=1.12.18=6
 - cycler=0.9.0=py27_0
 - decorator=4.0.6=py27_0
 - fontconfig=2.11.1=5
 - freetype=2.5.5=0
+- futures=3.0.3=py27_0
 - h5py=2.5.0=np110py27_4
 - hdf5=1.8.15.1=2
 - ipykernel=4.2.2=py27_0
@@ -58,6 +60,7 @@ dependencies:
 - qtconsole=4.1.1=py27_0
 - readline=6.2=2
 - redis=2.6.9=0
+- requests=2.9.1=py27_0
 - scipy=0.16.1=np110py27_0
 - setuptools=19.6.2=py27_0
 - simplegeneric=0.8.1=py27_0

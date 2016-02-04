@@ -3,6 +3,7 @@ channels:
   - piem
 dependencies:
   - aubio  # in piem channel (optionnal)
+  - bokeh
   - h5py
   - jupyter
   - matplotlib
