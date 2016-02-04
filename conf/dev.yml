@@ -35,10 +35,21 @@ worker:
   env_file:
     - app/sandbox/ts-docker-compose-dev.env
 
+# When stable buld from Parisson base image
+bokeh:
+  build: .
+  expose:
+    - 5006
+  command: bokeh serve --log-level debug --host bokeh:5006 --port 5006
+    
+
+# When stable buld from Parisson base image
 notebook:
   build: .
   ports:
     - "8888:8888"
   volumes_from:
     - app
+  links:
+    - bokeh
   command: sh -c "cd /srv/src/timeside/doc/ipynb; jupyter notebook --no-browser --ip=0.0.0.0"
