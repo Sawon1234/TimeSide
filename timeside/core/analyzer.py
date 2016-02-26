@@ -4,18 +4,18 @@
 
 # This file is part of TimeSide.
 
-# TimeSide is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 2 of the License, or
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 
-# TimeSide is distributed in the hope that it will be useful,
+# This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# GNU Affero General Public License for more details.
 
-# You should have received a copy of the GNU General Public License
-# along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Authors:
 #   Guillaume Pellerin <yomguy at parisson.com>
@@ -930,19 +930,51 @@ class SegmentLabelObject(LabelObject, SegmentObject):
                                   ('duration', None)])
 
     def _render_plot(self, ax, size=(1024,256)):
+        import matplotlib.patches as mpatches
         import itertools
         colors = itertools.cycle(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
         ax_color = {}
-        artist = {}
+        legend_patches = []
         for key, label in self.label_metadata.label.items():
             ax_color[key] = colors.next()
-            artist[key] = plt.axvspan(0, 0, color=ax_color[key], alpha=0.3)
+            # Creating artists specifically for adding to the legend (aka. Proxy artists)
+            legend_patches.append(mpatches.Patch(color=ax_color[key], label=label))
+            
         for time, duration, label in zip(self.time, self.duration, self.data):
             ax.axvspan(time, time + duration, color=ax_color[label], alpha=0.3)
 
-        #Create legend from custom artist/label lists
-        ax.legend(artist.values(), self.label_metadata.label.values())
+        # Create legend from custom artist/label lists
+        ax.legend(handles=legend_patches)#, self.label_metadata.label.values())
 
+    def merge_segment(self):
+        # Merge adjacent segments if they share the same label
+        if all(np.diff(self.label)):
+            # Nothing to merge
+            return
+        # Merge adjacent segments
+        label = self.label.tolist()
+        time = self.time.tolist()
+        duration = self.duration.tolist()
+
+        start = 0
+        while True:
+            try:
+                if label[start]==label[start+1]:
+                    del label[start+1]
+                    del time[start+1]
+                    duration[start] += duration[start+1]
+                    del duration[start+1]
+                else:
+                    start = start + 1
+
+            except IndexError:
+                break
+        # Copy back data to data_object               
+        self.label = label
+        self.time = time
+        self.duration = duration
+
+    
     def to_elan(self, elan_file, media_file=None, label_per_tier = 'ALL'):
         import pympi
         elan = pympi.Elan.Eaf(author='TimeSide')

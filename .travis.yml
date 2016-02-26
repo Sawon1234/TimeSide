@@ -1,30 +1,32 @@
 language: python
 python:
   - "2.7"
-
+  
 sudo: required
 
 services:
   - docker
 
-virtualenv:
-  system_site_packages: true
-
 env:
-  - TEST_TARGET=default  # Default unit test
-  - TEST_TARGET=cli      # Test for TimeSide command line interfaces
-  - TEST_TARGET=doc      # Test documentation and included doctest
-  - TEST_TARGET=server   # Test timeside.server
+  global:
+    - DOCKER_COMPOSE_VERSION: 1.5.2
+  matrix:
+    - TEST_TARGET=default  # Default unit test
+    - TEST_TARGET=cli      # Test for TimeSide command line interfaces
+    - TEST_TARGET=doc      # Test documentation and included doctest
+    - TEST_TARGET=server   # Test timeside.server
 
-
-# command to prepare the system to install prerequisites or dependencies
 before_install:
-  - sudo pip install docker-compose
+  - docker-compose --version
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - docker-compose --version
+
 
 # Install TimeSide
 install:
-  #- pip install --upgrade pip
-  #- pip install -r requirements.txt
   - docker-compose -f docker-compose.yml -f conf/build.yml build
 
 

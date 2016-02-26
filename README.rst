@@ -4,7 +4,7 @@ TimeSide : audio processing framework for the web
 
 |version| |downloads| |travis_master| |coveralls_master|
 
-.. |travis_master| image:: https://secure.travis-ci.org/Parisson/TimeSide.png?branch=master
+.. |travis_master| image:: https://travis-ci.org/Parisson/TimeSide.svg
     :target: https://travis-ci.org/Parisson/TimeSide/
 
 .. |coveralls_master| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=master
@@ -27,8 +27,8 @@ Use cases
 
 * Scaled audio computing (filtering, machine learning, etc)
 * Web audio visualization
-* Plugin prototyping
-* Pseudo-realtime transcoding and streaming
+* Audio process prototyping
+* Realtime and on-demand transcoding and streaming over the web
 * Automatic segmentation and labelling synchronized with audio events
 
 
@@ -67,6 +67,7 @@ News
 * Add `Jupyter Notebook <http://jupyter.org/>`_ support for easy prototyping, experimenting and sharing (see the examples in the doc).
 * Add an experimental web server and REST API based on Django REST Framework, Redis and Celery. This now provides a real web audio processing server with high scaling capabilities thanks to Docker (clustering) and Celery (multiprocessing).
 * Start the development of a new player interface thanks to Angular and WavesJS.
+* Huge cleanup of JS files. Please now use bower to get all JS dependencies as `listed in settings <https://github.com/Parisson/TimeSide/blob/dev/app/sandbox/settings.py#L199>`_.
 * Add metadata export to Elan annotation files.
 * Fix and improve some data structures in analyzer result containers.
 * Many various bugfixes.
@@ -92,61 +93,15 @@ News
 
 For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/NEWS.rst
 
-Dive in
-========
+Documentation
+==============
 
-Let's produce a really simple audio analysis of an audio file.
-First, list all available plugins:
-
-.. doctest::
-
->>> import timeside.core
->>> timeside.core.list_processors()
-
-Define some processors:
-
-.. doctest::
-
->>> from timeside.core import get_processor
->>> from timeside.core.tools.test_samples import samples
->>> wavfile = samples['sweep.wav']
->>> decoder  =  get_processor('file_decoder')(wavfile)
->>> grapher  =  get_processor('waveform_simple')()
->>> analyzer =  get_processor('level')()
->>> encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
-
-Then run the *magic* pipeline:
-
-.. doctest::
-
->>> (decoder | grapher | analyzer | encoder).run()
-
-Render the grapher results:
-
-.. doctest::
-
->>> grapher.render(output='waveform.png')
-
-Show the analyzer results:
-
-.. doctest::
-
->>> print 'Level:', analyzer.results  # doctest: +ELLIPSIS
-    Level: {'level.max': AnalyzerResult(...)}
-
-
-So, in only one pass, the audio file has been decoded, analyzed, graphed and transcoded.
-
-For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
-
-API / Documentation
-====================
-
-* General : http://files.parisson.com/timeside/doc/
+* General documentation : http://files.parisson.com/timeside/doc/
 * Tutorials : http://files.parisson.com/timeside/doc/tutorials/index.html
-* Notebooks : http://nbviewer.ipython.org/github/thomasfillon/Timeside-demos/tree/master/
+* API : http://files.parisson.com/timeside/doc/api/index.html
 * Publications : https://github.com/Parisson/Telemeta-doc
-* Player / UI (old wiki) : https://github.com/Parisson/TimeSide/wiki/Ui-Guide
+* Some online notebooks : http://mybinder.org/repo/thomasfillon/Timeside-demos
+* Player / UI wiki : https://github.com/Parisson/TimeSide/wiki/Ui-Guide
 * A player example : http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
 
 Install
@@ -199,13 +154,13 @@ License
 =======
 
 TimeSide is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 TimeSide is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+GNU Affero General Public License for more details.
 
-See LICENSE for more details.
+Read the LICENSE.txt file for more details.

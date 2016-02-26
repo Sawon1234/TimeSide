@@ -4,7 +4,7 @@ TimeSide : audio processing framework for the web
 
 |version| |downloads| |travis_master| |coveralls_master|
 
-.. |travis_master| image:: https://secure.travis-ci.org/Parisson/TimeSide.png?branch=master
+.. |travis_master| image:: https://travis-ci.org/Parisson/TimeSide.svg
     :target: https://travis-ci.org/Parisson/TimeSide/
 
 .. |coveralls_master| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=master
@@ -27,8 +27,8 @@ Use cases
 
 * Scaled audio computing (filtering, machine learning, etc)
 * Web audio visualization
-* Plugin prototyping
-* Pseudo-realtime transcoding and streaming
+* Audio process prototyping
+* Realtime and on-demand transcoding and streaming over the web
 * Automatic segmentation and labelling synchronized with audio events
 
 
