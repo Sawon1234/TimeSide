@@ -1,9 +1,11 @@
 name: timeside
 channels:
   - piem
+  - bokeh
 dependencies:
   - aubio  # in piem channel (optionnal)
   - bokeh
+  - datashader
   - h5py
   - jupyter
   - matplotlib

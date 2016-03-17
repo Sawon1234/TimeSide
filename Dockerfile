@@ -32,6 +32,7 @@ RUN apt-get update && \
 # Install binary dependencies with conda
 COPY environment-pinned.yml /srv/src/timeside/
 RUN conda config --add channels piem &&\
+    conda config --add channels bokeh &&\
     conda env update --name root --file environment-pinned.yml
 
 COPY . /srv/src/timeside/
