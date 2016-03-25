@@ -10,6 +10,7 @@ dependencies:
 - dask=0.8.0=py27_0
 - datashader=0.1.0=py27_0
 - datashape=0.5.1=py27_0
+- cycler=0.10.0=py27_0
 - decorator=4.0.9=py27_0
 - enum34=1.1.2=py27_0
 - fontconfig=2.11.1=5
@@ -28,7 +29,7 @@ dependencies:
 - jpeg=8d=0
 - jsonschema=2.4.0=py27_0
 - jupyter=1.0.0=py27_1
-- jupyter_client=4.2.1=py27_0
+- jupyter_client=4.2.2=py27_0
 - jupyter_console=4.1.1=py27_0
 - jupyter_core=4.1.0=py27_0
 - libgfortran=3.0=0
@@ -43,6 +44,7 @@ dependencies:
 - mistune=0.7.2=py27_0
 - mkl=11.3.1=0
 - multipledispatch=0.4.8=py27_0
+- mysql-python=1.2.5=py27_0
 - nbconvert=4.1.0=py27_0
 - nbformat=4.0.1=py27_0
 - networkx=1.11=py27_0
@@ -58,7 +60,7 @@ dependencies:
 - pexpect=3.3=py27_0
 - pickleshare=0.5=py27_0
 - pillow=3.1.1=py27_0
-- pip=8.1.0=py27_0
+- pip=8.1.1=py27_0
 - pixman=0.32.6=0
 - psutil=4.1.0=py27_0
 - ptyprocess=0.5=py27_0
@@ -78,7 +80,7 @@ dependencies:
 - redis=2.6.9=0
 - requests=2.9.1=py27_0
 - scipy=0.17.0=np110py27_2
-- setuptools=20.2.2=py27_0
+- setuptools=20.3=py27_0
 - simplegeneric=0.8.1=py27_0
 - simplejson=3.8.2=py27_0
 - singledispatch=3.4.0.3=py27_0
@@ -117,7 +119,7 @@ dependencies:
   - django-extensions==1.6.1
   - djangorestframework==2.4.8
   - ipython-genutils==0.1.0
-  - jupyter-client==4.2.1
+  - jupyter-client==4.2.2
   - jupyter-console==4.1.1
   - jupyter-core==4.1.0
   - kombu==3.0.34
