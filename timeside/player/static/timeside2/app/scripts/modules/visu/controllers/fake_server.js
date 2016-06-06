@@ -9,8 +9,8 @@ function (A,d3) {
   return Marionette.Controller.extend({
     initialize: function (options)	 {
       /*A.vent.on(A.Cfg.events.livraison.transporteur.get,this.onGetTransporteurData,this);*/
-      var wave_uri = "./data/geiger.json";
-      d3.json( wave_uri,_.bind(this.onJSONLoaded,this));   
+      var wave_uri = "/static/timeside2/app/data/geiger.json";
+      d3.json( wave_uri,_.bind(this.onJSONLoaded,this));
 
       this.ready=false;
 
@@ -93,7 +93,7 @@ function (A,d3) {
 
       canvas.width = (endPx-startPx);
       canvas.height = this.imgPicture.height;
-      
+
       context.drawImage(this.imgPicture, startPx, 0 ,(endPx-startPx),this.imgPicture.height);
       //var croppedData = context.getImageData(0, 0, (endPx-startPx), this.imgPicture.height);
 
@@ -156,7 +156,7 @@ function (A,d3) {
         //from here
         result = means;
         if (result.length> nbItem)
-          result = result.slice(0,nbItem);  
+          result = result.slice(0,nbItem);
       }
 
       callback(result);
@@ -164,9 +164,9 @@ function (A,d3) {
 
     }
 
-  
 
-   
+
+
 
   });
 });

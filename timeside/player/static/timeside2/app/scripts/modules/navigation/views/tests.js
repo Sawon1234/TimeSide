@@ -26,7 +26,7 @@ function (Marionette,A,BaseQeopaView,d3) {
     //Func
     onLaunchTest:function() {
       //var wave_json;
-      var wave_uri = "./data/geiger.json";
+      var wave_uri = "/static/timeside2/app/data/geiger.json";
       var max_points = 1024;
 
       this.width = 880,
@@ -58,7 +58,7 @@ function (Marionette,A,BaseQeopaView,d3) {
 
 
 
-   
+
     //render le bloc de tout le morceau
     svg_render:function( data, svg ) {
 
@@ -103,8 +103,8 @@ function (Marionette,A,BaseQeopaView,d3) {
         .range([0, width]),
       yScale = d3.scale.linear()
         .domain([-max_val, max_val]).nice()
-        .range([height, 0]); 
-      
+        .range([height, 0]);
+
       var xAxis = d3.svg.axis()
           .scale(xScale)
           .orient('bottom')
@@ -121,7 +121,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       chart.append('g')
           .attr('class', 'y axis')
           .attr('transform', 'translate(40,0)')
-          .call(yAxis);  
+          .call(yAxis);
 
       this.xScale = xScale;
       this.yScale=yScale;
@@ -271,9 +271,9 @@ function (Marionette,A,BaseQeopaView,d3) {
         .attr("width", bar_width );
 
       newData.exit().remove();
-      return;  
+      return;
 
-     
+
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -284,26 +284,26 @@ function (Marionette,A,BaseQeopaView,d3) {
     },
 
     onRender:function() {
-       
+
     },
 
-    onDestroy: function () {      
+    onDestroy: function () {
     },
 
     onDomRefresh:function() {
     },
 
     serializeData: function () {
-      
+
 
       return {
-       
+
       }
     },
 
 
-    
-    
-   
+
+
+
   });
 });

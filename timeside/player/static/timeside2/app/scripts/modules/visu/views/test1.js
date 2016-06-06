@@ -32,7 +32,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
      ////////////////////////////////////////////////////////////////////////////////////
     //Ouais
     onTestAudio:function() {
-      A.vent.trigger('audio:loadGlobalFile','/data/audio.mp3');
+      A.vent.trigger('audio:loadGlobalFile','/static/timeside2/app/data/audio.mp3');
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -43,13 +43,13 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
 
     //when navigator is ready
     onNavigatorLoaded:function() {
-     
+
       this.trackWaveformView_1.init();
       this.trackWaveformView_2.init();
       this.trackCanvasView.init();
 
     },
-    
+
     ////////////////////////////////////////////////////////////////////////////////////
     //Life cycle
 
@@ -86,26 +86,26 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
           this.ui.containerOtherTracks.append(this.trackCanvasView.render().$el);
           this.trackCanvasView.defineTrack({type : "testcanvas", width : 800, height : 200});
        }
-    
+
     },
 
-    onDestroy: function () {      
+    onDestroy: function () {
     },
 
     onDomRefresh:function() {
     },
 
     serializeData: function () {
-      
+
 
       return {
-       
+
       }
     },
 
 
-    
-    
-   
+
+
+
   });
 });
