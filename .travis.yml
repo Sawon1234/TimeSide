@@ -27,6 +27,7 @@ before_install:
 
 # Install TimeSide
 install:
+  - docker-compose -f docker-compose.yml -f env/build.yml pull
   - docker-compose -f docker-compose.yml -f env/build.yml build
 
 
@@ -60,7 +61,7 @@ script:
   - if [[ $TEST_TARGET == 'server' ]]; then
        docker-compose -f docker-compose.yml -f env/build.yml start db;
        sleep 40;
-       docker-compose -f docker-compose.yml -f env/build.yml up -d;
+       docker-compose -f docker-compose.yml -f env/build.yml up;
        sleep 20;
        curl --fail --retry 10 --retry-delay 5  -v http://localhost:8000/timeside/api/items/;
     fi
@@ -74,5 +75,4 @@ after_success:
 after_script:
   - if [[ $TEST_TARGET == 'server' ]]; then
            docker-compose stop;
-           docker-compose logs db app;
     fi
