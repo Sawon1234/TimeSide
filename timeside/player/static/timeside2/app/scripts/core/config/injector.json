@@ -5,6 +5,11 @@
 	"trackInfoController" : "trackInfoController",
 	"dataLoader" : "dataLoader",
 
+	"analysisController" : "analysisController",
+
+	"Below ----- Currenty loop segment defined" : "",
+	"currentLoopSegment" : "currentLoopSegment",
+
 	"-------------------------------------------------------------------------------------------------" : "",
 	"Below --- canvas":"",
 	"fakeserver_canvas" : "fakeserver_canvas",
@@ -15,10 +20,13 @@
 
 	"useFakeData" : "useFakeData",
 
-	"allProcessors" : "allProcessors",
+	"allProcessors" : "allProcessors - DEPRECATED!!!",
+	"allAnalysis"	: "allAnalysis",
 	"allItems" : "allItems",
 
 	"currentItem" : "currentItem"
+
+
 
 	
 }

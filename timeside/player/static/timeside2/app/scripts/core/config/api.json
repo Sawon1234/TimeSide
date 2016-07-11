@@ -12,6 +12,13 @@
       "getProcessors" : {
         "path": "/processors"
       },
+      "getAnalysis" : {
+        "path": "/analysis"
+      },
+      "createAnalysis" : {
+         "path"     : "/analysis_track",
+        "method" : "post"
+      },
       "getItems" : {
         "path": "/items"
       },

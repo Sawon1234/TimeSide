@@ -3,10 +3,12 @@ define([
   '#qt_core/controllers/all',
   '#navigation_core/baseviews/base_qeopaview',
   'd3',
-  '#visu/controllers/providers/waveform_dataprovider'
+  '#visu/controllers/providers/waveform_dataprovider',
+  '#behaviors/index',
+  '../params/param_simple'
 ],
 
-function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
+function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider,behaviors,ParamSimpleView) {
   'use strict';
 
   /**
@@ -17,6 +19,20 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
 
   **/
   return BaseQeopaView.extend({
+
+    behaviors: function () {
+      return {
+        Parameter : {
+          behaviorClass : behaviors.viewParameterTrack
+        }
+      };
+    },
+
+    parametersConfig : {
+      getParameterView:function() {
+        return new ParamSimpleView();
+      }
+    },
 
     template: templates['visu/sub_track_waveform'],
     className: 'track-waveform',
@@ -39,7 +55,7 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
       this.width = o.width;
       this.height = o.height;
       this.isTrueDataServer = o.trueData!==undefined ? o.trueData : false;
-
+      this.type = o.type;
       
 
       this.dataProvider = new WaveformDataProvider();
@@ -60,17 +76,8 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
     **/
     setVisibleData:function(data) {
       this.hadFirstData = true;
+      this.lastReceivedData = data;
 
-
-      //debug value
-      /*var _debug = "",showDebug=false;
-      if (data.length<100) {
-        _.each(data,function(_obj) {
-          _debug=_debug+"("+_obj.time+','+_obj.value+")";
-        })
-        console.log('DEBUG : '+_debug);
-        showDebug=true;
-      }*/
       var showDebug=false;//hop
 
       A.log.log('track_waveform','setVisibleData----------------- on '+data.length);
@@ -79,36 +86,40 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
 
       var height = this.height;
       var width = this.width;
+      var barHeight = this.height-this.size.axisHeight;
+      var axisHeight = this.size.axisHeight;
       var bar_width = width / data.length;
 
       //update scales
-      this.yScale = d3.scale.linear().range([height, -height]);
+      this.yScale.range([barHeight, -barHeight]);
       var max_val = this.MAX_VALUE;
       this.yScale.domain([-max_val, max_val]);
 
       var trackDuration = A._i.getOnCfg('trackInfoController').getDuration();
       //this.xScale = d3.scale.linear().domain([0, 1024]); //TMP
       A.log.log('track_waveform:setVisibleData',' X scale will go from '+data[0].time+'->'+data[data.length-1].time);
-      this.xScale = d3.time.scale().domain([data[0].time,data[data.length-1].time]).range([0,width]);
+      this.xScale.domain([data[0].time,data[data.length-1].time]).range([0,width]);
 
       //go
       var chart = this.d3chart;
       var x=this.xScale,y = this.yScale;
 
       var newdata =  chart.selectAll("g").data(data,function(d) {return d.time;});
+
+
+
       var self=this;
       //ENTER
       newdata.enter().append("g") // svg "group"
         .attr("transform", function(d, i) {
           var translateX = self.xScale(d.time);
-          if (showDebug)
-            console.log('     X : '+d.time+' --> '+translateX);
-          return "translate(" + translateX /** bar_width*/ + ",0)";
-          //return "translate(" + i * bar_width + ",0)";
+          /*if (showDebug)
+            console.log('     X : '+d.time+' --> '+translateX);*/
+          return "translate(" + translateX + ","+axisHeight+")";
         })
         .append("rect")
         .attr("y", function(d) {
-          var yv = height - Math.abs(y(d.value)/2) - height/2 + 2;
+          var yv = barHeight - Math.abs(y(d.value)/2) - barHeight/2 + 2;
           return yv;
         })
         .attr("height", function(d) {
@@ -117,21 +128,13 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
 
       //STILL HERE
       //@Todo : optim : don't do width/height/y here
-      chart.selectAll("g")/*.transition(0.75)*/.attr("transform", function(d, i) {
+      chart.selectAll("g").attr("transform", function(d, i) {
           var translateX = self.xScale(d.time);
-
+/*
           if (showDebug)
-            console.log('     X2 : '+d.time+' --> '+translateX);
-          return "translate(" + translateX /** bar_width*/ + ",0)";
-          //return "translate(" + i * bar_width + ",0)";
-        }).select('rect')
-        .attr("y", function(d) {
-          var yv = height - Math.abs(y(d.value)/2) - height/2 + 2;
-          return yv;
-        })
-        .attr("height", function(d) {
-          return Math.abs(y(d.value)); })
-        .attr("width", bar_width );  
+            console.log('     X2 : '+d.time+' --> '+translateX);*/
+          return "translate(" + translateX + ","+axisHeight+")";
+        });  
 
       newdata.exit().remove();
         
@@ -144,77 +147,70 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
     createGraphicBase:function() {
       var height = this.height;
       var width = this.width;
+      var barHeight = this.height-this.size.axisHeight;
+      var axisHeight = this.size.axisHeight;
 
-      var node = d3.select(this.$el.find('.container_track_waveform > .svg')[0]).append("svg")
+      this.node = d3.select(this.$el.find('.container_track_waveform > .svg')[0]).append("svg")
         .attr("class","chart")
         .attr("width", width)
         .attr("height", height);
 
+      var chart = this.node.attr("width", width).attr("height", height);
 
-      
-      //below a tester ensuite
-      //this.xScale = d3.scale.linear().domain([0, trackDuration]);
+      //append the data background
+      /*this.node.append("rect")
+          .attr("class","chart-background")
+          .attr("y", axisHeight)
+          .attr("x", 0)
+          .attr("width", width)
+          .attr("height", height-axisHeight);*/
 
-      var chart = node.attr("width", width).attr("height", height);
-      this.d3chart = chart;  
+      //append the data container
+      this.node.append("g")
+          .attr("class","chart-data")
+          .attr("width", width)
+          .attr("height", height);
+
+
+      this.d3chart = chart.selectAll(".chart-data"); 
+
+      this.yScale = d3.scale.linear();
+      this.xScale = d3.time.scale(); 
     },
 
 
+    /////////////////////////////////////////////////////////////////////////////////////
+    //Height change
+    changeHeight:function(newHeight) {
+      this.height = newHeight;
+      this.node.attr('height',newHeight);
+      this.d3chart.attr('height',newHeight);
 
 
+      var barHeight = this.height-this.size.axisHeight;
+      var axisHeight = this.size.axisHeight;
+      var bar_width = this.width / this.lastReceivedData.length;
 
-    /*BELOW : OLD FUNCS*/
+      //update scales
+      this.yScale.range([barHeight, -barHeight]);
+      var self=this;
+      var x=this.xScale,y = this.yScale;
 
-    startLoading:function(width,height) {
-      
-      this.width = width;
-      this.height = height;
-
-      //server to be ready
-      this.loadData();
-    },
-
-
-    //1 : load data
-    loadData:function() {
-      var trackDuration = A._i.getOnCfg('trackInfoController').getDuration();
-      A._v.trigCfg('fakeserver.getdata','',0,trackDuration,1024,_.bind(this.onData,this));
-    },
-
-    //2 : keep data & start rendering
-    onData:function(data) { 
-      console.log('hey im so happy');
-      this.data = data;
-      this.createBaseChart();
-    },
-
-    //////////////////////////////////
-    // Render methods
-
-    //1
-    //creates the chart, kept as this.d3chart
-    createBaseChart:function() {
-      
-
-      var bar_width = width / data.length;
-
-      var bar = chart.selectAll("g")
-        .data(data,function(d) {return d.time;})
-        .enter().append("g") // svg "group"
-        .attr("transform", function(d, i) {
-          return "translate(" + i * bar_width + ",0)";
+      this.d3chart.selectAll('g').attr("transform", function(d, i) {
+          var translateX = self.xScale(d.time);
+          return "translate(" + translateX + ","+axisHeight+")";
         })
-        .append("rect")
+        .selectAll("rect")
         .attr("y", function(d) {
-          var yv = height - Math.abs(y(d.value)/2) - height/2 + 2;
+          var yv = barHeight - Math.abs(y(d.value)/2) - barHeight/2 + 2;
           return yv;
         })
         .attr("height", function(d) {
           return Math.abs(y(d.value)); })
         .attr("width", bar_width );
+      //this.
     },
 
-    
 
     /////////////////////////////////////////////////////////////////////////////////////
     //new window navigator
@@ -232,6 +228,9 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
     ////////////////////////////////////////////////////////////////////////////////////
     initialize: function () {
       A._v.onCfg('navigator.newWindow','',this.onNavigatorNewWindow,this);
+
+      //on initialize specify the sizes
+      this.updateSize();
     },
 
     onRender:function() {
@@ -250,7 +249,13 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
        
       }
     },
-
+    ////////////////////////////////////////////////////////////////////////////////////
+    //SIZES
+    updateSize : function() {
+      this.size = {
+        axisHeight : 0
+      };
+    }
 
     
     

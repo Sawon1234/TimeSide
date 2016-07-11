@@ -21,6 +21,7 @@ api_router.register(r'presets', views.PresetViewSet)
 api_router.register(r'tasks', views.TaskViewSet)
 api_router.register(r'users', views.UserViewSet)
 api_router.register(r'analysis', views.AnalysisViewSet)
+api_router.register(r'analysis_track', views.AnalysisTrackViewSet)
 
 urlpatterns = patterns(
     '',
@@ -33,6 +34,7 @@ urlpatterns = patterns(
             # Ex: /api/item/--<uuid>--/download/ogg
             url(r'^download/(?P<extension>' + EXPORT_EXT + ')$', views.ItemTranscode.as_view(), name="item-transcode"),
             # Analysis
+            url(r'^analysis/$', views.ItemAnalysisList.as_view(), name="item-analysis-list"),
             url(r'^analysis/(?P<analysis_uuid>[0-9a-z-]+)/', views.ItemAnalysis.as_view(), name="item-analysis"),
             ]),
         ),
@@ -45,7 +47,8 @@ urlpatterns = patterns(
             url(r'^angular/$', views.ItemDetailAngular.as_view(), name='timeside-item-angular'),
             ])
         ),
-      # Results
+    # Results
+    url(r'^api/results/(?P<uuid>[0-9a-z-]+)/visual/', views.ResultVisualizationViewSet.as_view(), name="timeside-result-visualization"),
     url(r'^results/(?P<pk>.*)/json/$', views.ResultAnalyzerView.as_view(), name="timeside-result-json"),
     url(r'^results/(?P<pk>.*)/png/$', views.ResultGrapherView.as_view(), name="timeside-result-png"),
     url(r'^results/(?P<pk>.*)/audio/$', views.ResultEncoderView.as_view(), name="timeside-result-audio"),
