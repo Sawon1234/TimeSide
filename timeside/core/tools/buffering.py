@@ -24,12 +24,14 @@ import tables
 from tempfile import NamedTemporaryFile
 import numpy as np
 
+
 class BufferTable(object):
+
     def __init__(self, array_names=None):
         self._tempfile = NamedTemporaryFile(mode='w', suffix='.h5',
                                             prefix='ts_buf_',
                                             delete=True)
-        self.fileh = tables.openFile(self._tempfile.name, mode='w')
+        self.fileh = tables.open_file(self._tempfile.name, mode='w')
 
         if not array_names:
             array_names = []
@@ -44,7 +46,7 @@ class BufferTable(object):
     def __getitem__(self, name):
         return self.fileh.root.__getattr__(name)
 
-    #def __set_item__(self, name, value):
+    # def __set_item__(self, name, value):
     #    self.fileh.root.__setattr__(name, value)
 
     def append(self, name, new_array):
@@ -58,7 +60,7 @@ class BufferTable(object):
             if name not in self.array_names:
                 self.array_names.append(name)
              # The following is compatible with pytables 3 only
-             #self.fileh.create_earray(where=self.fileh.root,
+             # self.fileh.create_earray(where=self.fileh.root,
              #                         name=name,
              #                         obj=[new_array])
             atom = tables.Atom.from_dtype(new_array.dtype)
